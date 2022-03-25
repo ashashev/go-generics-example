@@ -1,0 +1,6 @@
+vendor/
+*.log
+*.bak
+*.out
+go.work
+go.work.sum

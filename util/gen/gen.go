@@ -3,7 +3,8 @@ package gen
 import (
 	"math/rand"
 
-	"github.com/ashashev/go-generics-example/util"
+	"github.com/ashashev/go-generics-example/util/call"
+	"github.com/ashashev/go-generics-example/util/slice"
 )
 
 var alphabet = []rune{
@@ -17,6 +18,14 @@ func RandFromAlphabet[T any](alphabet []T) T {
 	return alphabet[rand.Intn(len(alphabet))]
 }
 
+func RandAlpha(len int) string {
+	return string(slice.Fill(len, call.Semi1(RandFromAlphabet[rune], alphabet[:26])))
+}
+
+func RandAlphaNum(len int) string {
+	return string(slice.Fill(len, call.Semi1(RandFromAlphabet[rune], alphabet[:36])))
+}
+
 func RandStr(len int) string {
-	return string(util.FillSlice(len, util.SemiCall1(RandFromAlphabet[rune], alphabet)))
+	return string(slice.Fill(len, call.Semi1(RandFromAlphabet[rune], alphabet)))
 }

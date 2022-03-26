@@ -1,7 +1,7 @@
 .PHONY: bench bench_long
 
 bench:
-	go test -bench . ./foo
+	go test -bench . ./example
 
 bench_long:
-	go test -bench . -benchtime 10s ./foo
+	go test -bench . -benchtime 10s ./example

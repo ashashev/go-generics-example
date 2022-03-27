@@ -1,8 +1,8 @@
 # Results
 
-[[toc]]
-
 ## Slice Contains
+
+### Description
 
 There are three implementations of the same thing. It's a simple for-loop, with
 early returning when an element is found.
@@ -59,7 +59,10 @@ Slice of ints
 | `BenchmarkSliceContainsInt/Specific_Has-8`            |  4.917 ns/op |  4.915 ns/op |  4.922 ns/op |  4.905 ns/op |  4.912 ns/op |
 
 
-#### Run #1
+<details>
+<summary>Raw benchmarks results</summary>
+
+**Run #1**
 ```
 go test -bench . -benchtime 10s ./example/contains_test.go
 goos: linux
@@ -77,7 +80,7 @@ PASS
 ok  	command-line-arguments	88.451s
 ```
 
-#### Run #2
+**Run #2**
 ```
 go test -bench . -benchtime 10s ./example/contains_test.go
 goos: linux
@@ -95,7 +98,7 @@ PASS
 ok  	command-line-arguments	87.970s
 ```
 
-#### Run #3
+**Run #3**
 ```
 go test -bench . -benchtime 10s ./example/contains_test.go
 goos: linux
@@ -113,7 +116,7 @@ PASS
 ok  	command-line-arguments	88.104s
 ```
 
-#### Run #4
+**Run #4**
 ```
 go test -bench . -benchtime 10s ./example/contains_test.go
 goos: linux
@@ -131,7 +134,7 @@ PASS
 ok  	command-line-arguments	88.801s
 ```
 
-#### Run #5
+**Run #5**
 ```
 go test -bench . -benchtime 10s ./example/contains_test.go
 goos: linux
@@ -148,8 +151,11 @@ BenchmarkSliceContainsInt/Specific_Has-8                   	1000000000	         
 PASS
 ok  	command-line-arguments	88.657s
 ```
+</details>
 
 ## Get Keys
+
+### Description
 
 Here I benchmark extracting keys from a map. Again the generic implementation:
 ```golang
@@ -191,7 +197,10 @@ Slice of strings
 | BenchmarkGetKeys/Generic-8  | 611.7 ns/op | 654.8 ns/op | 635.2 ns/op | 611.3 ns/op | 647.8 ns/op |
 | BenchmarkGetKeys/Specific-8 | 614.1 ns/op | 727.5 ns/op | 685.7 ns/op | 686.9 ns/op | 599.9 ns/op |
 
-#### Run #1
+<details>
+<summary>Raw benchmarks results</summary>
+
+**Run #1**
 ```
 go test -bench . -benchtime 10s ./example/get_keys_test.go
 goos: linux
@@ -203,7 +212,7 @@ PASS
 ok  	command-line-arguments	33.625s
 ```
 
-#### Run #2
+**Run #2**
 ```
 go test -bench . -benchtime 10s ./example/get_keys_test.go
 goos: linux
@@ -215,7 +224,7 @@ PASS
 ok  	command-line-arguments	35.084s
 ```
 
-#### Run #3
+**Run #3**
 ```
 go test -bench . -benchtime 10s ./example/get_keys_test.go
 goos: linux
@@ -227,7 +236,7 @@ PASS
 ok  	command-line-arguments	30.245s
 ```
 
-#### Run #4
+**Run #4**
 ```
 go test -bench . -benchtime 10s ./example/get_keys_test.go
 goos: linux
@@ -239,7 +248,7 @@ PASS
 ok  	command-line-arguments	31.878s
 ```
 
-#### Run #5
+**Run #5**
 ```
 go test -bench . -benchtime 10s ./example/get_keys_test.go
 goos: linux
@@ -250,8 +259,11 @@ BenchmarkGetKeys/Specific-8        	18048080	       599.9 ns/op
 PASS
 ok  	command-line-arguments	28.627s
 ```
+</details>
 
 ## Error Handing
+
+### Description
 
 In this case, I imitate getting data for creating of Data instance from
 an external source.
@@ -518,7 +530,10 @@ Slice of strings
 | BenchmarkResultFirstFail/Chain-8   | 0.0000034 ns/op | 0.0000033 ns/op | 0.0000030 ns/op | 0.0000027 ns/op | 0.0000023 ns/op |
 | BenchmarkResultFirstFail/Result-8  | 0.0000042 ns/op | 0.0000035 ns/op | 0.0000032 ns/op | 0.0000036 ns/op | 0.0000042 ns/op |
 
-#### Run #1
+<details>
+<summary>Raw benchmarks results</summary>
+
+**Run #1**
 ```
 go test -bench . ./example/result_test.go
 goos: linux
@@ -534,7 +549,7 @@ PASS
 ok  	command-line-arguments	0.010s
 ```
 
-#### Run #2
+**Run #2**
 ```
 go test -bench . ./example/result_test.go
 goos: linux
@@ -550,7 +565,7 @@ PASS
 ok  	command-line-arguments	0.009s
 ```
 
-#### Run #3
+**Run #3**
 ```
 go test -bench . ./example/result_test.go
 goos: linux
@@ -566,7 +581,7 @@ PASS
 ok  	command-line-arguments	0.009s
 ```
 
-#### Run #4
+**Run #4**
 ```
 go test -bench . ./example/result_test.go
 goos: linux
@@ -582,7 +597,7 @@ PASS
 ok  	command-line-arguments	0.009s
 ```
 
-#### Run #5
+**Run #5**
 ```
 go test -bench . ./example/result_test.go
 goos: linux
@@ -597,4 +612,4 @@ BenchmarkResultFirstFail/Result-8        	1000000000	         0.0000042 ns/op
 PASS
 ok  	command-line-arguments	0.009s
 ```
-
+</details>

@@ -1,5 +1,7 @@
 # Results
 
+[[toc]]
+
 ## Slice Contains
 
 There are three implementations of the same thing. It's a simple for-loop, with
@@ -38,7 +40,26 @@ func SliceContainsInt(haystack []int, needle int) bool {
 }
 ```
 
-### Run #1
+### Benchmars results
+
+Slice of strings
+|                Benchmark name                         |    Run #1    |    Run #2    |    Run #3    |    Run #4    |    Run #5    |
+| ----------------------------------------------------- | ------------ | ------------ |------------- |------------- |------------- |
+| `BenchmarkSliceContainsString/Generic_Doesn't_Has-8`  | 14.93 ns/op  | 15.18 ns/op  | 15.17 ns/op  | 15.17 ns/op  | 15.28 ns/op  |
+| `BenchmarkSliceContainsString/Generic_Has-8`          | 39.87 ns/op  | 40.66 ns/op  | 40.59 ns/op  | 40.79 ns/op  | 40.85 ns/op  |
+| `BenchmarkSliceContainsString/Specific_Doesn't_Has-8` | 14.94 ns/op  | 15.19 ns/op  | 15.22 ns/op  | 15.87 ns/op  | 15.21 ns/op  |
+| `BenchmarkSliceContainsString/Specific_Has-8`         | 40.51 ns/op  | 40.63 ns/op  | 40.64 ns/op  | 40.63 ns/op  | 40.81 ns/op  |
+
+Slice of ints
+|                Benchmark name                         |    Run #1    |    Run #2    |    Run #3    |    Run #4    |    Run #5    |
+| ----------------------------------------------------- | ------------ | ------------ |------------- |------------- |------------- |
+| `BenchmarkSliceContainsInt/Generic_Doesn't_Has-8`     |  8.444 ns/op |  8.458 ns/op |  8.443 ns/op |  8.448 ns/op |  8.461 ns/op |
+| `BenchmarkSliceContainsInt/Generic_Has-8`             |  4.898 ns/op |  4.913 ns/op |  4.922 ns/op |  4.905 ns/op |  4.920 ns/op |
+| `BenchmarkSliceContainsInt/Specific_Doesn't_Has-8`    |  8.444 ns/op |  8.436 ns/op |  8.446 ns/op |  8.447 ns/op |  8.449 ns/op |
+| `BenchmarkSliceContainsInt/Specific_Has-8`            |  4.917 ns/op |  4.915 ns/op |  4.922 ns/op |  4.905 ns/op |  4.912 ns/op |
+
+
+#### Run #1
 ```
 go test -bench . -benchtime 10s ./example/contains_test.go
 goos: linux
@@ -56,7 +77,7 @@ PASS
 ok  	command-line-arguments	88.451s
 ```
 
-### Run #2
+#### Run #2
 ```
 go test -bench . -benchtime 10s ./example/contains_test.go
 goos: linux
@@ -74,7 +95,7 @@ PASS
 ok  	command-line-arguments	87.970s
 ```
 
-### Run #3
+#### Run #3
 ```
 go test -bench . -benchtime 10s ./example/contains_test.go
 goos: linux
@@ -92,7 +113,7 @@ PASS
 ok  	command-line-arguments	88.104s
 ```
 
-### Run #4
+#### Run #4
 ```
 go test -bench . -benchtime 10s ./example/contains_test.go
 goos: linux
@@ -110,7 +131,7 @@ PASS
 ok  	command-line-arguments	88.801s
 ```
 
-### Run #5
+#### Run #5
 ```
 go test -bench . -benchtime 10s ./example/contains_test.go
 goos: linux
@@ -162,7 +183,15 @@ type Data struct {
 }
 ```
 
-### Run #1
+### Benchmars results
+
+Slice of strings
+|      Benchmark name         |   Run #1    |   Run #2    |   Run #3    |   Run #4    |   Run #5    |
+| --------------------------- | ----------- | ----------- |------------ |------------ |------------ |
+| BenchmarkGetKeys/Generic-8  | 611.7 ns/op | 654.8 ns/op | 635.2 ns/op | 611.3 ns/op | 647.8 ns/op |
+| BenchmarkGetKeys/Specific-8 | 614.1 ns/op | 727.5 ns/op | 685.7 ns/op | 686.9 ns/op | 599.9 ns/op |
+
+#### Run #1
 ```
 go test -bench . -benchtime 10s ./example/get_keys_test.go
 goos: linux
@@ -174,7 +203,7 @@ PASS
 ok  	command-line-arguments	33.625s
 ```
 
-### Run #2
+#### Run #2
 ```
 go test -bench . -benchtime 10s ./example/get_keys_test.go
 goos: linux
@@ -186,7 +215,7 @@ PASS
 ok  	command-line-arguments	35.084s
 ```
 
-### Run #3
+#### Run #3
 ```
 go test -bench . -benchtime 10s ./example/get_keys_test.go
 goos: linux
@@ -198,7 +227,7 @@ PASS
 ok  	command-line-arguments	30.245s
 ```
 
-### Run #4
+#### Run #4
 ```
 go test -bench . -benchtime 10s ./example/get_keys_test.go
 goos: linux
@@ -210,7 +239,7 @@ PASS
 ok  	command-line-arguments	31.878s
 ```
 
-### Run #5
+#### Run #5
 ```
 go test -bench . -benchtime 10s ./example/get_keys_test.go
 goos: linux
@@ -477,7 +506,19 @@ func (*S2) GetField3(string, float64) result.Result[uint64] {
 }
 ```
 
-### Run #1
+### Benchmars results
+
+Slice of strings
+|         Benchmark name             |    Run #1       |    Run #2       |    Run #3       |    Run #4       |    Run #5       |
+| ---------------------------------- | --------------- | --------------- | --------------- | --------------- | --------------- |
+| BenchmarkResultSuccess/IfGuard-8   | 0.0000009 ns/op | 0.0000006 ns/op | 0.0000006 ns/op | 0.0000006 ns/op | 0.0000009 ns/op |
+| BenchmarkResultSuccess/Chain-8     | 0.0000012 ns/op | 0.0000014 ns/op | 0.0000012 ns/op | 0.0000015 ns/op | 0.0000013 ns/op |
+| BenchmarkResultSuccess/Result-8    | 0.0000032 ns/op | 0.0000032 ns/op | 0.0000031 ns/op | 0.0000029 ns/op | 0.0000027 ns/op |
+| BenchmarkResultFirstFail/IfGuard-8 | 0.0000028 ns/op | 0.0000032 ns/op | 0.0000029 ns/op | 0.0000026 ns/op | 0.0000025 ns/op |
+| BenchmarkResultFirstFail/Chain-8   | 0.0000034 ns/op | 0.0000033 ns/op | 0.0000030 ns/op | 0.0000027 ns/op | 0.0000023 ns/op |
+| BenchmarkResultFirstFail/Result-8  | 0.0000042 ns/op | 0.0000035 ns/op | 0.0000032 ns/op | 0.0000036 ns/op | 0.0000042 ns/op |
+
+#### Run #1
 ```
 go test -bench . ./example/result_test.go
 goos: linux
@@ -493,7 +534,7 @@ PASS
 ok  	command-line-arguments	0.010s
 ```
 
-### Run #2
+#### Run #2
 ```
 go test -bench . ./example/result_test.go
 goos: linux
@@ -509,7 +550,7 @@ PASS
 ok  	command-line-arguments	0.009s
 ```
 
-### Run #3
+#### Run #3
 ```
 go test -bench . ./example/result_test.go
 goos: linux
@@ -525,7 +566,7 @@ PASS
 ok  	command-line-arguments	0.009s
 ```
 
-### Run #4
+#### Run #4
 ```
 go test -bench . ./example/result_test.go
 goos: linux
@@ -541,7 +582,7 @@ PASS
 ok  	command-line-arguments	0.009s
 ```
 
-### Run #5
+#### Run #5
 ```
 go test -bench . ./example/result_test.go
 goos: linux

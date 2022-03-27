@@ -142,21 +142,21 @@ func (*S2) GetPartsID(fail bool) result.Result[[]string] {
 		return result.FromErr[[]string](fmt.Errorf("fail"))
 	}
 
-	return result.FromValue([]string{"1qaz", "2wsx"})
+	return result.FromOK([]string{"1qaz", "2wsx"})
 }
 
 func (*S2) JoinParts(ps []string) result.Result[string] {
-	return result.FromValue("1qaz-2wsx")
+	return result.FromOK("1qaz-2wsx")
 }
 
 func (*S2) GetField1([]string, string) result.Result[string] {
-	return result.FromValue("3edc")
+	return result.FromOK("3edc")
 }
 
 func (*S2) GetField2([]string, string) result.Result[float64] {
-	return result.FromValue(0.34)
+	return result.FromOK(0.34)
 }
 
 func (*S2) GetField3(string, float64) result.Result[uint64] {
-	return result.FromValue[uint64](24)
+	return result.FromOK[uint64](24)
 }

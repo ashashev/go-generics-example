@@ -84,28 +84,40 @@ func DataBuildedWithResultUseS1(firstFail bool) (*example.Data, error) {
 
 func BenchmarkResultSuccess(b *testing.B) {
 	b.Run("IfGuard", func(b *testing.B) {
-		DataBuildedWithIfGuard(false)
+		for i := 0; i < b.N; i++ {
+			DataBuildedWithIfGuard(false)
+		}
 	})
 
 	b.Run("Chain", func(b *testing.B) {
-		DataBuildedWithChain(false)
+		for i := 0; i < b.N; i++ {
+			DataBuildedWithChain(false)
+		}
 	})
 
 	b.Run("Result", func(b *testing.B) {
-		DataBuildedWithResult(false)
+		for i := 0; i < b.N; i++ {
+			DataBuildedWithResult(false)
+		}
 	})
 }
 
 func BenchmarkResultFirstFail(b *testing.B) {
 	b.Run("IfGuard", func(b *testing.B) {
-		DataBuildedWithIfGuard(true)
+		for i := 0; i < b.N; i++ {
+			DataBuildedWithIfGuard(true)
+		}
 	})
 
 	b.Run("Chain", func(b *testing.B) {
-		DataBuildedWithChain(true)
+		for i := 0; i < b.N; i++ {
+			DataBuildedWithChain(true)
+		}
 	})
 
 	b.Run("Result", func(b *testing.B) {
-		DataBuildedWithResult(true)
+		for i := 0; i < b.N; i++ {
+			DataBuildedWithResult(true)
+		}
 	})
 }

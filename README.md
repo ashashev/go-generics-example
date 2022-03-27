@@ -191,7 +191,6 @@ type Data struct {
 
 ### Benchmars results
 
-Slice of strings
 |      Benchmark name         |   Run #1    |   Run #2    |   Run #3    |   Run #4    |   Run #5    |
 | --------------------------- | ----------- | ----------- |------------ |------------ |------------ |
 | BenchmarkGetKeys/Generic-8  | 611.7 ns/op | 654.8 ns/op | 635.2 ns/op | 611.3 ns/op | 647.8 ns/op |
@@ -520,96 +519,95 @@ func (*S2) GetField3(string, float64) result.Result[uint64] {
 
 ### Benchmars results
 
-Slice of strings
-|         Benchmark name             |    Run #1       |    Run #2       |    Run #3       |    Run #4       |    Run #5       |
-| ---------------------------------- | --------------- | --------------- | --------------- | --------------- | --------------- |
-| BenchmarkResultSuccess/IfGuard-8   | 0.0000009 ns/op | 0.0000006 ns/op | 0.0000006 ns/op | 0.0000006 ns/op | 0.0000009 ns/op |
-| BenchmarkResultSuccess/Chain-8     | 0.0000012 ns/op | 0.0000014 ns/op | 0.0000012 ns/op | 0.0000015 ns/op | 0.0000013 ns/op |
-| BenchmarkResultSuccess/Result-8    | 0.0000032 ns/op | 0.0000032 ns/op | 0.0000031 ns/op | 0.0000029 ns/op | 0.0000027 ns/op |
-| BenchmarkResultFirstFail/IfGuard-8 | 0.0000028 ns/op | 0.0000032 ns/op | 0.0000029 ns/op | 0.0000026 ns/op | 0.0000025 ns/op |
-| BenchmarkResultFirstFail/Chain-8   | 0.0000034 ns/op | 0.0000033 ns/op | 0.0000030 ns/op | 0.0000027 ns/op | 0.0000023 ns/op |
-| BenchmarkResultFirstFail/Result-8  | 0.0000042 ns/op | 0.0000035 ns/op | 0.0000032 ns/op | 0.0000036 ns/op | 0.0000042 ns/op |
+|         Benchmark name             |    Run #1    |    Run #2    |    Run #3    |    Run #4    |    Run #5    |
+| ---------------------------------- | ------------ | ------------ | ------------ | ------------ | ------------ |
+| BenchmarkResultSuccess/IfGuard-8   |  50.33 ns/op |  50.66 ns/op |  48.36 ns/op |  45.08 ns/op |  51.88 ns/op |
+| BenchmarkResultSuccess/Chain-8     | 115.2 ns/op  | 123.4 ns/op  | 121.9 ns/op  | 132.9 ns/op  | 116.0 ns/op  |
+| BenchmarkResultSuccess/Result-8    | 646.4 ns/op  | 629.5 ns/op  | 639.6 ns/op  | 691.7 ns/op  | 671.7 ns/op  |
+| BenchmarkResultFirstFail/IfGuard-8 |  63.13 ns/op |  65.09 ns/op |  64.65 ns/op |  65.68 ns/op |  65.84 ns/op |
+| BenchmarkResultFirstFail/Chain-8   |  73.44 ns/op |  75.13 ns/op |  76.08 ns/op |  77.22 ns/op |  77.18 ns/op |
+| BenchmarkResultFirstFail/Result-8  | 331.9 ns/op  | 326.0 ns/op  | 331.7 ns/op  | 335.5 ns/op  | 337.2 ns/op  |
 
 <details>
 <summary>Raw benchmarks results</summary>
 
 **Run #1**
 ```
-go test -bench . ./example/result_test.go
+go test -bench . -benchtime 10s ./example/result_test.go
 goos: linux
 goarch: amd64
 cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
-BenchmarkResultSuccess/IfGuard-8         	1000000000	         0.0000009 ns/op
-BenchmarkResultSuccess/Chain-8           	1000000000	         0.0000012 ns/op
-BenchmarkResultSuccess/Result-8          	1000000000	         0.0000032 ns/op
-BenchmarkResultFirstFail/IfGuard-8       	1000000000	         0.0000028 ns/op
-BenchmarkResultFirstFail/Chain-8         	1000000000	         0.0000034 ns/op
-BenchmarkResultFirstFail/Result-8        	1000000000	         0.0000042 ns/op
+BenchmarkResultSuccess/IfGuard-8         	245688754	        50.33 ns/op
+BenchmarkResultSuccess/Chain-8           	100000000	       115.2 ns/op
+BenchmarkResultSuccess/Result-8          	19845818	       646.4 ns/op
+BenchmarkResultFirstFail/IfGuard-8       	187245092	        63.13 ns/op
+BenchmarkResultFirstFail/Chain-8         	165661989	        73.44 ns/op
+BenchmarkResultFirstFail/Result-8        	37920778	       331.9 ns/op
 PASS
-ok  	command-line-arguments	0.010s
+ok  	command-line-arguments	93.036s
 ```
 
 **Run #2**
 ```
-go test -bench . ./example/result_test.go
+go test -bench . -benchtime 10s ./example/result_test.go
 goos: linux
 goarch: amd64
 cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
-BenchmarkResultSuccess/IfGuard-8         	1000000000	         0.0000006 ns/op
-BenchmarkResultSuccess/Chain-8           	1000000000	         0.0000014 ns/op
-BenchmarkResultSuccess/Result-8          	1000000000	         0.0000032 ns/op
-BenchmarkResultFirstFail/IfGuard-8       	1000000000	         0.0000032 ns/op
-BenchmarkResultFirstFail/Chain-8         	1000000000	         0.0000033 ns/op
-BenchmarkResultFirstFail/Result-8        	1000000000	         0.0000035 ns/op
+BenchmarkResultSuccess/IfGuard-8         	246970146	        50.66 ns/op
+BenchmarkResultSuccess/Chain-8           	85197841	       123.4 ns/op
+BenchmarkResultSuccess/Result-8          	17917130	       629.5 ns/op
+BenchmarkResultFirstFail/IfGuard-8       	188722370	        65.09 ns/op
+BenchmarkResultFirstFail/Chain-8         	162459198	        75.13 ns/op
+BenchmarkResultFirstFail/Result-8        	35596854	       326.0 ns/op
 PASS
-ok  	command-line-arguments	0.009s
+ok  	command-line-arguments	90.385s
 ```
 
 **Run #3**
 ```
-go test -bench . ./example/result_test.go
+go test -bench . -benchtime 10s ./example/result_test.go
 goos: linux
 goarch: amd64
 cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
-BenchmarkResultSuccess/IfGuard-8         	1000000000	         0.0000006 ns/op
-BenchmarkResultSuccess/Chain-8           	1000000000	         0.0000012 ns/op
-BenchmarkResultSuccess/Result-8          	1000000000	         0.0000031 ns/op
-BenchmarkResultFirstFail/IfGuard-8       	1000000000	         0.0000029 ns/op
-BenchmarkResultFirstFail/Chain-8         	1000000000	         0.0000030 ns/op
-BenchmarkResultFirstFail/Result-8        	1000000000	         0.0000032 ns/op
+BenchmarkResultSuccess/IfGuard-8         	294567483	        48.36 ns/op
+BenchmarkResultSuccess/Chain-8           	103453724	       121.9 ns/op
+BenchmarkResultSuccess/Result-8          	18639026	       639.6 ns/op
+BenchmarkResultFirstFail/IfGuard-8       	186451594	        64.65 ns/op
+BenchmarkResultFirstFail/Chain-8         	160628366	        76.08 ns/op
+BenchmarkResultFirstFail/Result-8        	38132449	       331.7 ns/op
 PASS
-ok  	command-line-arguments	0.009s
+ok  	command-line-arguments	113.194s
 ```
 
 **Run #4**
 ```
-go test -bench . ./example/result_test.go
+go test -bench . -benchtime 10s ./example/result_test.go
 goos: linux
 goarch: amd64
 cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
-BenchmarkResultSuccess/IfGuard-8         	1000000000	         0.0000006 ns/op
-BenchmarkResultSuccess/Chain-8           	1000000000	         0.0000015 ns/op
-BenchmarkResultSuccess/Result-8          	1000000000	         0.0000029 ns/op
-BenchmarkResultFirstFail/IfGuard-8       	1000000000	         0.0000026 ns/op
-BenchmarkResultFirstFail/Chain-8         	1000000000	         0.0000027 ns/op
-BenchmarkResultFirstFail/Result-8        	1000000000	         0.0000036 ns/op
+BenchmarkResultSuccess/IfGuard-8         	244181370	        45.08 ns/op
+BenchmarkResultSuccess/Chain-8           	89014900	       132.9 ns/op
+BenchmarkResultSuccess/Result-8          	23519503	       691.7 ns/op
+BenchmarkResultFirstFail/IfGuard-8       	184362183	        65.68 ns/op
+BenchmarkResultFirstFail/Chain-8         	156245961	        77.22 ns/op
+BenchmarkResultFirstFail/Result-8        	34628882	       335.5 ns/op
 PASS
-ok  	command-line-arguments	0.009s
+ok  	command-line-arguments	104.964s
 ```
 
 **Run #5**
 ```
-go test -bench . ./example/result_test.go
+go test -bench . -benchtime 10s ./example/result_test.go
 goos: linux
 goarch: amd64
 cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
-BenchmarkResultSuccess/IfGuard-8         	1000000000	         0.0000009 ns/op
-BenchmarkResultSuccess/Chain-8           	1000000000	         0.0000013 ns/op
-BenchmarkResultSuccess/Result-8          	1000000000	         0.0000027 ns/op
-BenchmarkResultFirstFail/IfGuard-8       	1000000000	         0.0000025 ns/op
-BenchmarkResultFirstFail/Chain-8         	1000000000	         0.0000023 ns/op
-BenchmarkResultFirstFail/Result-8        	1000000000	         0.0000042 ns/op
+BenchmarkResultSuccess/IfGuard-8         	277441502	        51.88 ns/op
+BenchmarkResultSuccess/Chain-8           	94269285	       116.0 ns/op
+BenchmarkResultSuccess/Result-8          	19246418	       671.7 ns/op
+BenchmarkResultFirstFail/IfGuard-8       	188478628	        65.84 ns/op
+BenchmarkResultFirstFail/Chain-8         	158639941	        77.18 ns/op
+BenchmarkResultFirstFail/Result-8        	37090761	       337.2 ns/op
 PASS
-ok  	command-line-arguments	0.009s
+ok  	command-line-arguments	94.967s
 ```
 </details>

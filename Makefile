@@ -10,4 +10,4 @@ bench_slice_contains_long:
 	go test -bench . -benchtime 10s ./example/contains_test.go
 
 bench_result:
-	go test -bench . ./example/result_test.go
+	go test -bench . -benchtime 10s ./example/result_test.go

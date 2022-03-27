@@ -20,14 +20,14 @@ type Either[L, R any] interface {
 	restrictedEitherImplementation()
 }
 
-func FromLeft[R, L any](value L) *Left[L, R] {
-	return &Left[L, R]{
+func FromLeft[R, L any](value L) Left[L, R] {
+	return Left[L, R]{
 		Value: value,
 	}
 }
 
-func FromRight[L, R any](value R) *Right[L, R] {
-	return &Right[L, R]{
+func FromRight[L, R any](value R) Right[L, R] {
+	return Right[L, R]{
 		Value: value,
 	}
 }

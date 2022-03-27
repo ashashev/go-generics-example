@@ -3,21 +3,173 @@ package result
 import (
 	"fmt"
 
-	"github.com/ashashev/go-generics-example/data/either"
+	"github.com/ashashev/go-generics-example/util/call"
 )
 
 var ErrEmptyResult = fmt.Errorf("empty result")
+var ErrUnexpectedResultBehaiviour = fmt.Errorf("unexpected result behaviour")
 
-type Result[T any] either.Either[error, T]
+type Result[T any] interface {
+	Get() T
+	Err() error
 
-func FromOK[T any](value T) Result[T] {
-	return either.FromRight[error](value)
+	// Both returns default value for T if result is empty
+	Both() (T, error)
+
+	restrictedImplementation()
 }
 
-func FromErr[T any](value error) Result[T] {
-	return either.FromLeft[T](value)
+func FromValue[T any](value T) Result[T] {
+	return &OK[T]{Value: value}
 }
 
-func Map[T1, T2 any](r1 Result[T1], op func(T1)T2) Result[T2] {
-	return either.Map[error, T1](r1, op)
+func FromErr[T any](err error) Result[T] {
+	return &Err[T]{Value: err}
+}
+
+func FromBoth[T any](value T, err error) Result[T] {
+	if err != nil {
+		return FromErr[T](err)
+	}
+
+	return FromValue(value)
+}
+
+func Map[A, B any](r Result[A], op func(A) B) Result[B] {
+	switch v := r.(type) {
+	case *OK[A]:
+		return &OK[B]{Value: op(v.Value)}
+	case *Err[A]:
+		return &Err[B]{Value: v.Value}
+	}
+	panic(ErrUnexpectedResultBehaiviour)
+}
+
+func Map2[T1, T2, R any](r1 Result[T1], r2 Result[T2], op func(T1, T2) R) Result[R] {
+	switch v := r1.(type) {
+	case *OK[T1]:
+		return Map(r2, call.Semi2(op, v.Value))
+	case *Err[T1]:
+		return &Err[R]{Value: v.Value}
+	}
+	panic(ErrUnexpectedResultBehaiviour)
+}
+
+func Map3[T1, T2, T3, R any](r1 Result[T1], r2 Result[T2], r3 Result[T3], op func(T1, T2, T3) R) Result[R] {
+	switch v := r1.(type) {
+	case *OK[T1]:
+		return Map2(r2, r3, call.Semi3(op, v.Value))
+	case *Err[T1]:
+		return &Err[R]{Value: v.Value}
+	}
+	panic(ErrUnexpectedResultBehaiviour)
+}
+
+func Map4[T1, T2, T3, T4, R any](r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4], op func(T1, T2, T3, T4) R) Result[R] {
+	switch v := r1.(type) {
+	case *OK[T1]:
+		return Map3(r2, r3, r4, call.Semi4(op, v.Value))
+	case *Err[T1]:
+		return &Err[R]{Value: v.Value}
+	}
+	panic(ErrUnexpectedResultBehaiviour)
+}
+
+func Map5[T1, T2, T3, T4, T5, R any](r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4], r5 Result[T5], op func(T1, T2, T3, T4, T5) R) Result[R] {
+	switch v := r1.(type) {
+	case *OK[T1]:
+		return Map4(r2, r3, r4, r5, call.Semi5(op, v.Value))
+	case *Err[T1]:
+		return &Err[R]{Value: v.Value}
+	}
+	panic(ErrUnexpectedResultBehaiviour)
+}
+
+func FlatMap[A, B any](r Result[A], op func(A) Result[B]) Result[B] {
+	switch v := r.(type) {
+	case *OK[A]:
+		return op(v.Value)
+	case *Err[A]:
+		return &Err[B]{Value: v.Value}
+	}
+	panic(ErrUnexpectedResultBehaiviour)
+}
+
+func FlatMap2[T1, T2, R any](r1 Result[T1], r2 Result[T2], op func(T1, T2) Result[R]) Result[R] {
+	switch v := r1.(type) {
+	case *OK[T1]:
+		return FlatMap(r2, call.Semi2(op, v.Value))
+	case *Err[T1]:
+		return &Err[R]{Value: v.Value}
+	}
+	panic(ErrUnexpectedResultBehaiviour)
+}
+
+func FlatMap3[T1, T2, T3, R any](r1 Result[T1], r2 Result[T2], r3 Result[T3], op func(T1, T2, T3) Result[R]) Result[R] {
+	switch v := r1.(type) {
+	case *OK[T1]:
+		return FlatMap2(r2, r3, call.Semi3(op, v.Value))
+	case *Err[T1]:
+		return &Err[R]{Value: v.Value}
+	}
+	panic(ErrUnexpectedResultBehaiviour)
+}
+
+func FlatMap4[T1, T2, T3, T4, R any](r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4], op func(T1, T2, T3, T4) Result[R]) Result[R] {
+	switch v := r1.(type) {
+	case *OK[T1]:
+		return FlatMap3(r2, r3, r4, call.Semi4(op, v.Value))
+	case *Err[T1]:
+		return &Err[R]{Value: v.Value}
+	}
+	panic(ErrUnexpectedResultBehaiviour)
+}
+
+func FlatMap5[T1, T2, T3, T4, T5, R any](r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4], r5 Result[T5], op func(T1, T2, T3, T4, T5) Result[R]) Result[R] {
+	switch v := r1.(type) {
+	case *OK[T1]:
+		return FlatMap4(r2, r3, r4, r5, call.Semi5(op, v.Value))
+	case *Err[T1]:
+		return &Err[R]{Value: v.Value}
+	}
+	panic(ErrUnexpectedResultBehaiviour)
+}
+
+type baseResultImpl[T any] struct{}
+
+func (baseResultImpl[T]) Get() T {
+	panic(ErrEmptyResult)
+}
+
+func (baseResultImpl[T]) Err() error {
+	return nil
+}
+
+func (baseResultImpl[T]) restrictedImplementation() {}
+
+type OK[T any] struct {
+	baseResultImpl[T]
+	Value T
+}
+
+func (r *OK[T]) Get() T {
+	return r.Value
+}
+
+func (r *OK[T]) Both() (T, error) {
+	return r.Value, nil
+}
+
+type Err[T any] struct {
+	baseResultImpl[T]
+	Value error
+}
+
+func (r *Err[T]) Err() error {
+	return r.Value
+}
+
+func (r *Err[T]) Both() (value T, err error) {
+	err = r.Value
+	return
 }

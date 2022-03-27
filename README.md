@@ -1,106 +1,238 @@
 # Results
 
-## Run #1
+## Slice Contains
+
+### Run #1
 ```
-go test -bench . -benchtime 10s ./example
+go test -bench . -benchtime 10s ./example/contains_test.go
 goos: linux
 goarch: amd64
-pkg: github.com/ashashev/go-generics-example/example
 cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
-BenchmarkSliceContainsString/Generic_Doesn't_Has-8         	800580374	        14.92 ns/op
-BenchmarkSliceContainsString/Generic_Has-8                 	298324292	        40.41 ns/op
-BenchmarkSliceContainsString/Specific_Doesn't_Has-8        	791018108	        15.22 ns/op
-BenchmarkSliceContainsString/Specific_Has-8                	294893266	        40.80 ns/op
-BenchmarkSliceContainsInt/Generic_Doesn't_Has-8            	1000000000	         8.452 ns/op
+BenchmarkSliceContainsString/Generic_Doesn't_Has-8         	793542500	        14.93 ns/op
+BenchmarkSliceContainsString/Generic_Has-8                 	300902487	        39.87 ns/op
+BenchmarkSliceContainsString/Specific_Doesn't_Has-8        	805521026	        14.94 ns/op
+BenchmarkSliceContainsString/Specific_Has-8                	296259190	        40.51 ns/op
+BenchmarkSliceContainsInt/Generic_Doesn't_Has-8            	1000000000	         8.444 ns/op
+BenchmarkSliceContainsInt/Generic_Has-8                    	1000000000	         4.898 ns/op
+BenchmarkSliceContainsInt/Specific_Doesn't_Has-8           	1000000000	         8.444 ns/op
+BenchmarkSliceContainsInt/Specific_Has-8                   	1000000000	         4.917 ns/op
+PASS
+ok  	command-line-arguments	88.451s
+```
+
+### Run #2
+```
+go test -bench . -benchtime 10s ./example/contains_test.go
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+BenchmarkSliceContainsString/Generic_Doesn't_Has-8         	788970160	        15.18 ns/op
+BenchmarkSliceContainsString/Generic_Has-8                 	295573492	        40.66 ns/op
+BenchmarkSliceContainsString/Specific_Doesn't_Has-8        	762757710	        15.19 ns/op
+BenchmarkSliceContainsString/Specific_Has-8                	280926486	        40.63 ns/op
+BenchmarkSliceContainsInt/Generic_Doesn't_Has-8            	1000000000	         8.458 ns/op
 BenchmarkSliceContainsInt/Generic_Has-8                    	1000000000	         4.913 ns/op
-BenchmarkSliceContainsInt/Specific_Doesn't_Has-8           	1000000000	         8.462 ns/op
+BenchmarkSliceContainsInt/Specific_Doesn't_Has-8           	1000000000	         8.436 ns/op
 BenchmarkSliceContainsInt/Specific_Has-8                   	1000000000	         4.915 ns/op
-BenchmarkGetKeys/Generic-8                                 	23922086	       690.2 ns/op
-BenchmarkGetKeys/Specific-8                                	27178148	       648.4 ns/op
 PASS
-ok  	github.com/ashashev/go-generics-example/example	123.851s
+ok  	command-line-arguments	87.970s
 ```
 
-## Run #2
+### Run #3
 ```
-go test -bench . -benchtime 10s ./example
+go test -bench . -benchtime 10s ./example/contains_test.go
 goos: linux
 goarch: amd64
-pkg: github.com/ashashev/go-generics-example/example
 cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
-BenchmarkSliceContainsString/Generic_Doesn't_Has-8         	795660807	        15.07 ns/op
-BenchmarkSliceContainsString/Generic_Has-8                 	295378468	        40.68 ns/op
-BenchmarkSliceContainsString/Specific_Doesn't_Has-8        	790436913	        15.18 ns/op
-BenchmarkSliceContainsString/Specific_Has-8                	293561124	        40.86 ns/op
-BenchmarkSliceContainsInt/Generic_Doesn't_Has-8            	1000000000	         8.445 ns/op
-BenchmarkSliceContainsInt/Generic_Has-8                    	1000000000	         4.913 ns/op
-BenchmarkSliceContainsInt/Specific_Doesn't_Has-8           	1000000000	         8.454 ns/op
-BenchmarkSliceContainsInt/Specific_Has-8                   	1000000000	         4.914 ns/op
-BenchmarkGetKeys/Generic-8                                 	26450540	       701.7 ns/op
-BenchmarkGetKeys/Specific-8                                	16807503	       615.9 ns/op
+BenchmarkSliceContainsString/Generic_Doesn't_Has-8         	791005816	        15.17 ns/op
+BenchmarkSliceContainsString/Generic_Has-8                 	295192660	        40.59 ns/op
+BenchmarkSliceContainsString/Specific_Doesn't_Has-8        	767063816	        15.22 ns/op
+BenchmarkSliceContainsString/Specific_Has-8                	282376572	        40.64 ns/op
+BenchmarkSliceContainsInt/Generic_Doesn't_Has-8            	1000000000	         8.443 ns/op
+BenchmarkSliceContainsInt/Generic_Has-8                    	1000000000	         4.922 ns/op
+BenchmarkSliceContainsInt/Specific_Doesn't_Has-8           	1000000000	         8.446 ns/op
+BenchmarkSliceContainsInt/Specific_Has-8                   	1000000000	         4.922 ns/op
 PASS
-ok  	github.com/ashashev/go-generics-example/example	118.838s
+ok  	command-line-arguments	88.104s
 ```
 
-## Run #3
+### Run #4
 ```
-go test -bench . -benchtime 10s ./example
+go test -bench . -benchtime 10s ./example/contains_test.go
 goos: linux
 goarch: amd64
-pkg: github.com/ashashev/go-generics-example/example
 cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
-BenchmarkSliceContainsString/Generic_Doesn't_Has-8         	793174506	        15.13 ns/op
-BenchmarkSliceContainsString/Generic_Has-8                 	295299771	        42.19 ns/op
-BenchmarkSliceContainsString/Specific_Doesn't_Has-8        	774304808	        15.54 ns/op
-BenchmarkSliceContainsString/Specific_Has-8                	294594625	        40.84 ns/op
-BenchmarkSliceContainsInt/Generic_Doesn't_Has-8            	1000000000	         8.473 ns/op
-BenchmarkSliceContainsInt/Generic_Has-8                    	1000000000	         4.927 ns/op
-BenchmarkSliceContainsInt/Specific_Doesn't_Has-8           	1000000000	         8.451 ns/op
-BenchmarkSliceContainsInt/Specific_Has-8                   	1000000000	         4.912 ns/op
-BenchmarkGetKeys/Generic-8                                 	29269405	       642.1 ns/op
-BenchmarkGetKeys/Specific-8                                	26109948	       662.9 ns/op
-PASS
-ok  	github.com/ashashev/go-generics-example/example	126.310s
-
-```
-## Run #4
-```
-go test -bench . -benchtime 10s ./example
-goos: linux
-goarch: amd64
-pkg: github.com/ashashev/go-generics-example/example
-cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
-BenchmarkSliceContainsString/Generic_Doesn't_Has-8         	802100079	        15.01 ns/op
-BenchmarkSliceContainsString/Generic_Has-8                 	294808531	        40.69 ns/op
-BenchmarkSliceContainsString/Specific_Doesn't_Has-8        	790537789	        15.20 ns/op
-BenchmarkSliceContainsString/Specific_Has-8                	294710605	        40.71 ns/op
-BenchmarkSliceContainsInt/Generic_Doesn't_Has-8            	1000000000	         8.457 ns/op
-BenchmarkSliceContainsInt/Generic_Has-8                    	1000000000	         4.913 ns/op
-BenchmarkSliceContainsInt/Specific_Doesn't_Has-8           	1000000000	         8.450 ns/op
-BenchmarkSliceContainsInt/Specific_Has-8                   	1000000000	         4.918 ns/op
-BenchmarkGetKeys/Generic-8                                 	28285144	       645.5 ns/op
-BenchmarkGetKeys/Specific-8                                	18511918	       741.8 ns/op
-PASS
-ok  	github.com/ashashev/go-generics-example/example	121.873s
-```
-
-## Run #5
-```
-go test -bench . -benchtime 10s ./example
-goos: linux
-goarch: amd64
-pkg: github.com/ashashev/go-generics-example/example
-cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
-BenchmarkSliceContainsString/Generic_Doesn't_Has-8         	802601623	        15.05 ns/op
-BenchmarkSliceContainsString/Generic_Has-8                 	294817100	        41.97 ns/op
-BenchmarkSliceContainsString/Specific_Doesn't_Has-8        	790406701	        15.14 ns/op
-BenchmarkSliceContainsString/Specific_Has-8                	281663295	        40.70 ns/op
-BenchmarkSliceContainsInt/Generic_Doesn't_Has-8            	1000000000	         8.432 ns/op
-BenchmarkSliceContainsInt/Generic_Has-8                    	1000000000	         4.912 ns/op
-BenchmarkSliceContainsInt/Specific_Doesn't_Has-8           	1000000000	         8.449 ns/op
+BenchmarkSliceContainsString/Generic_Doesn't_Has-8         	788782045	        15.17 ns/op
+BenchmarkSliceContainsString/Generic_Has-8                 	295247182	        40.79 ns/op
+BenchmarkSliceContainsString/Specific_Doesn't_Has-8        	758607546	        15.87 ns/op
+BenchmarkSliceContainsString/Specific_Has-8                	294588723	        40.63 ns/op
+BenchmarkSliceContainsInt/Generic_Doesn't_Has-8            	1000000000	         8.448 ns/op
+BenchmarkSliceContainsInt/Generic_Has-8                    	1000000000	         4.905 ns/op
+BenchmarkSliceContainsInt/Specific_Doesn't_Has-8           	1000000000	         8.447 ns/op
 BenchmarkSliceContainsInt/Specific_Has-8                   	1000000000	         4.905 ns/op
-BenchmarkGetKeys/Generic-8                                 	25260649	       652.5 ns/op
-BenchmarkGetKeys/Specific-8                                	17656322	       728.6 ns/op
 PASS
-ok  	github.com/ashashev/go-generics-example/example	127.595s
+ok  	command-line-arguments	88.801s
 ```
+
+### Run #5
+```
+go test -bench . -benchtime 10s ./example/contains_test.go
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+BenchmarkSliceContainsString/Generic_Doesn't_Has-8         	774865777	        15.28 ns/op
+BenchmarkSliceContainsString/Generic_Has-8                 	294912528	        40.85 ns/op
+BenchmarkSliceContainsString/Specific_Doesn't_Has-8        	790071013	        15.21 ns/op
+BenchmarkSliceContainsString/Specific_Has-8                	292575610	        40.81 ns/op
+BenchmarkSliceContainsInt/Generic_Doesn't_Has-8            	1000000000	         8.461 ns/op
+BenchmarkSliceContainsInt/Generic_Has-8                    	1000000000	         4.920 ns/op
+BenchmarkSliceContainsInt/Specific_Doesn't_Has-8           	1000000000	         8.449 ns/op
+BenchmarkSliceContainsInt/Specific_Has-8                   	1000000000	         4.912 ns/op
+PASS
+ok  	command-line-arguments	88.657s
+```
+
+## Get Keys
+
+### Run #1
+```
+go test -bench . -benchtime 10s ./example/get_keys_test.go
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+BenchmarkGetKeys/Generic-8         	18520962	       611.7 ns/op
+BenchmarkGetKeys/Specific-8        	20124560	       614.1 ns/op
+PASS
+ok  	command-line-arguments	33.625s
+```
+
+### Run #2
+```
+go test -bench . -benchtime 10s ./example/get_keys_test.go
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+BenchmarkGetKeys/Generic-8         	26377960	       654.8 ns/op
+BenchmarkGetKeys/Specific-8        	23120361	       727.5 ns/op
+PASS
+ok  	command-line-arguments	35.084s
+```
+
+### Run #3
+```
+go test -bench . -benchtime 10s ./example/get_keys_test.go
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+BenchmarkGetKeys/Generic-8         	28369766	       635.2 ns/op
+BenchmarkGetKeys/Specific-8        	16090556	       685.7 ns/op
+PASS
+ok  	command-line-arguments	30.245s
+```
+
+### Run #4
+```
+go test -bench . -benchtime 10s ./example/get_keys_test.go
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+BenchmarkGetKeys/Generic-8         	26351716	       611.3 ns/op
+BenchmarkGetKeys/Specific-8        	21451940	       686.9 ns/op
+PASS
+ok  	command-line-arguments	31.878s
+```
+
+### Run #5
+```
+go test -bench . -benchtime 10s ./example/get_keys_test.go
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+BenchmarkGetKeys/Generic-8         	25701085	       647.8 ns/op
+BenchmarkGetKeys/Specific-8        	18048080	       599.9 ns/op
+PASS
+ok  	command-line-arguments	28.627s
+```
+
+## Error Handing
+
+### Run #1
+```
+go test -bench . ./example/result_test.go
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+BenchmarkResultSuccess/IfGuard-8         	1000000000	         0.0000009 ns/op
+BenchmarkResultSuccess/Chain-8           	1000000000	         0.0000012 ns/op
+BenchmarkResultSuccess/Result-8          	1000000000	         0.0000032 ns/op
+BenchmarkResultFirstFail/IfGuard-8       	1000000000	         0.0000028 ns/op
+BenchmarkResultFirstFail/Chain-8         	1000000000	         0.0000034 ns/op
+BenchmarkResultFirstFail/Result-8        	1000000000	         0.0000042 ns/op
+PASS
+ok  	command-line-arguments	0.010s
+```
+
+### Run #2
+```
+go test -bench . ./example/result_test.go
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+BenchmarkResultSuccess/IfGuard-8         	1000000000	         0.0000006 ns/op
+BenchmarkResultSuccess/Chain-8           	1000000000	         0.0000014 ns/op
+BenchmarkResultSuccess/Result-8          	1000000000	         0.0000032 ns/op
+BenchmarkResultFirstFail/IfGuard-8       	1000000000	         0.0000032 ns/op
+BenchmarkResultFirstFail/Chain-8         	1000000000	         0.0000033 ns/op
+BenchmarkResultFirstFail/Result-8        	1000000000	         0.0000035 ns/op
+PASS
+ok  	command-line-arguments	0.009s
+```
+
+### Run #3
+```
+go test -bench . ./example/result_test.go
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+BenchmarkResultSuccess/IfGuard-8         	1000000000	         0.0000006 ns/op
+BenchmarkResultSuccess/Chain-8           	1000000000	         0.0000012 ns/op
+BenchmarkResultSuccess/Result-8          	1000000000	         0.0000031 ns/op
+BenchmarkResultFirstFail/IfGuard-8       	1000000000	         0.0000029 ns/op
+BenchmarkResultFirstFail/Chain-8         	1000000000	         0.0000030 ns/op
+BenchmarkResultFirstFail/Result-8        	1000000000	         0.0000032 ns/op
+PASS
+ok  	command-line-arguments	0.009s
+```
+
+### Run #4
+```
+go test -bench . ./example/result_test.go
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+BenchmarkResultSuccess/IfGuard-8         	1000000000	         0.0000006 ns/op
+BenchmarkResultSuccess/Chain-8           	1000000000	         0.0000015 ns/op
+BenchmarkResultSuccess/Result-8          	1000000000	         0.0000029 ns/op
+BenchmarkResultFirstFail/IfGuard-8       	1000000000	         0.0000026 ns/op
+BenchmarkResultFirstFail/Chain-8         	1000000000	         0.0000027 ns/op
+BenchmarkResultFirstFail/Result-8        	1000000000	         0.0000036 ns/op
+PASS
+ok  	command-line-arguments	0.009s
+```
+
+### Run #5
+```
+go test -bench . ./example/result_test.go
+goos: linux
+goarch: amd64
+cpu: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+BenchmarkResultSuccess/IfGuard-8         	1000000000	         0.0000009 ns/op
+BenchmarkResultSuccess/Chain-8           	1000000000	         0.0000013 ns/op
+BenchmarkResultSuccess/Result-8          	1000000000	         0.0000027 ns/op
+BenchmarkResultFirstFail/IfGuard-8       	1000000000	         0.0000025 ns/op
+BenchmarkResultFirstFail/Chain-8         	1000000000	         0.0000023 ns/op
+BenchmarkResultFirstFail/Result-8        	1000000000	         0.0000042 ns/op
+PASS
+ok  	command-line-arguments	0.009s
+```
+

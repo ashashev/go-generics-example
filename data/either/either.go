@@ -21,18 +21,18 @@ type Either[L, R any] interface {
 }
 
 func FromLeft[R, L any](value L) *Left[L, R] {
-	return &Left[L,R] {
+	return &Left[L, R]{
 		Value: value,
 	}
 }
 
 func FromRight[L, R any](value R) *Right[L, R] {
-	return &Right[L,R] {
+	return &Right[L, R]{
 		Value: value,
 	}
 }
 
-func Map[L, A, B any](a Either[L, A], op func(A) B) Either[L, B] {
+func Map[L, A, B any](op func(A) B, a Either[L, A]) Either[L, B] {
 	switch v := a.(type) {
 	case Left[L, A]:
 		return FromLeft[B](v.Value)
@@ -42,47 +42,47 @@ func Map[L, A, B any](a Either[L, A], op func(A) B) Either[L, B] {
 	panic(ErrUnexpectedEitherBehaiviour)
 }
 
-func Map2[L, A1, A2, B any](a1 Either[L, A1], a2 Either[L, A2], op func(A1, A2) B) Either[L, B] {
+func Map2[L, A1, A2, B any](op func(A1, A2) B, a1 Either[L, A1], a2 Either[L, A2]) Either[L, B] {
 	switch v := a1.(type) {
 	case Left[L, A1]:
 		return FromLeft[B](v.Value)
 	case Right[L, A1]:
-		return Map(a2, call.Semi2(op, v.Value))
+		return Map(call.Semi2(op, v.Value), a2)
 	}
 	panic(ErrUnexpectedEitherBehaiviour)
 }
 
-func Map3[L, A1, A2, A3, B any](a1 Either[L, A1], a2 Either[L, A2], a3 Either[L, A3], op func(A1, A2, A3) B) Either[L, B] {
+func Map3[L, A1, A2, A3, B any](op func(A1, A2, A3) B, a1 Either[L, A1], a2 Either[L, A2], a3 Either[L, A3]) Either[L, B] {
 	switch v := a1.(type) {
 	case Left[L, A1]:
 		return FromLeft[B](v.Value)
 	case Right[L, A1]:
-		return Map2(a2, a3, call.Semi3(op, v.Value))
+		return Map2(call.Semi3(op, v.Value), a2, a3)
 	}
 	panic(ErrUnexpectedEitherBehaiviour)
 }
 
-func Map4[L, A1, A2, A3, A4, B any](a1 Either[L, A1], a2 Either[L, A2], a3 Either[L, A3], a4 Either[L, A4], op func(A1, A2, A3, A4) B) Either[L, B] {
+func Map4[L, A1, A2, A3, A4, B any](op func(A1, A2, A3, A4) B, a1 Either[L, A1], a2 Either[L, A2], a3 Either[L, A3], a4 Either[L, A4]) Either[L, B] {
 	switch v := a1.(type) {
 	case Left[L, A1]:
 		return FromLeft[B](v.Value)
 	case Right[L, A1]:
-		return Map3(a2, a3, a4, call.Semi4(op, v.Value))
+		return Map3(call.Semi4(op, v.Value), a2, a3, a4)
 	}
 	panic(ErrUnexpectedEitherBehaiviour)
 }
 
-func Map5[L, A1, A2, A3, A4, A5, B any](a1 Either[L, A1], a2 Either[L, A2], a3 Either[L, A3], a4 Either[L, A4], a5 Either[L, A5], op func(A1, A2, A3, A4, A5) B) Either[L, B] {
+func Map5[L, A1, A2, A3, A4, A5, B any](op func(A1, A2, A3, A4, A5) B, a1 Either[L, A1], a2 Either[L, A2], a3 Either[L, A3], a4 Either[L, A4], a5 Either[L, A5]) Either[L, B] {
 	switch v := a1.(type) {
 	case Left[L, A1]:
 		return FromLeft[B](v.Value)
 	case Right[L, A1]:
-		return Map4(a2, a3, a4, a5, call.Semi5(op, v.Value))
+		return Map4(call.Semi5(op, v.Value), a2, a3, a4, a5)
 	}
 	panic(ErrUnexpectedEitherBehaiviour)
 }
 
-func FlatMap[L, A, B any](a Either[L, A], op func(A) Either[L, B]) Either[L, B] {
+func FlatMap[L, A, B any](op func(A) Either[L, B], a Either[L, A]) Either[L, B] {
 	switch v := a.(type) {
 	case Left[L, A]:
 		return FromLeft[B](v.Value)
@@ -92,42 +92,42 @@ func FlatMap[L, A, B any](a Either[L, A], op func(A) Either[L, B]) Either[L, B] 
 	panic(ErrUnexpectedEitherBehaiviour)
 }
 
-func FlatMap2[L, A1, A2, B any](a1 Either[L, A1], a2 Either[L, A2], op func(A1, A2) Either[L, B]) Either[L, B] {
+func FlatMap2[L, A1, A2, B any](op func(A1, A2) Either[L, B], a1 Either[L, A1], a2 Either[L, A2]) Either[L, B] {
 	switch v := a1.(type) {
 	case Left[L, A1]:
 		return FromLeft[B](v.Value)
 	case Right[L, A1]:
-		return FlatMap(a2, call.Semi2(op, v.Value))
+		return FlatMap(call.Semi2(op, v.Value), a2)
 	}
 	panic(ErrUnexpectedEitherBehaiviour)
 }
 
-func FlatMap3[L, A1, A2, A3, B any](a1 Either[L, A1], a2 Either[L, A2], a3 Either[L, A3], op func(A1, A2, A3) Either[L, B]) Either[L, B] {
+func FlatMap3[L, A1, A2, A3, B any](op func(A1, A2, A3) Either[L, B], a1 Either[L, A1], a2 Either[L, A2], a3 Either[L, A3]) Either[L, B] {
 	switch v := a1.(type) {
 	case Left[L, A1]:
 		return FromLeft[B](v.Value)
 	case Right[L, A1]:
-		return FlatMap2(a2, a3, call.Semi3(op, v.Value))
+		return FlatMap2(call.Semi3(op, v.Value), a2, a3)
 	}
 	panic(ErrUnexpectedEitherBehaiviour)
 }
 
-func FlatMap4[L, A1, A2, A3, A4, B any](a1 Either[L, A1], a2 Either[L, A2], a3 Either[L, A3], a4 Either[L, A4], op func(A1, A2, A3, A4) Either[L, B]) Either[L, B] {
+func FlatMap4[L, A1, A2, A3, A4, B any](op func(A1, A2, A3, A4) Either[L, B], a1 Either[L, A1], a2 Either[L, A2], a3 Either[L, A3], a4 Either[L, A4]) Either[L, B] {
 	switch v := a1.(type) {
 	case Left[L, A1]:
 		return FromLeft[B](v.Value)
 	case Right[L, A1]:
-		return FlatMap3(a2, a3, a4, call.Semi4(op, v.Value))
+		return FlatMap3(call.Semi4(op, v.Value), a2, a3, a4)
 	}
 	panic(ErrUnexpectedEitherBehaiviour)
 }
 
-func FlatMap5[L, A1, A2, A3, A4, A5, B any](a1 Either[L, A1], a2 Either[L, A2], a3 Either[L, A3], a4 Either[L, A4], a5 Either[L, A5], op func(A1, A2, A3, A4, A5) Either[L, B]) Either[L, B] {
+func FlatMap5[L, A1, A2, A3, A4, A5, B any](op func(A1, A2, A3, A4, A5) Either[L, B], a1 Either[L, A1], a2 Either[L, A2], a3 Either[L, A3], a4 Either[L, A4], a5 Either[L, A5]) Either[L, B] {
 	switch v := a1.(type) {
 	case Left[L, A1]:
 		return FromLeft[B](v.Value)
 	case Right[L, A1]:
-		return FlatMap4(a2, a3, a4, a5, call.Semi5(op, v.Value))
+		return FlatMap4(call.Semi5(op, v.Value), a2, a3, a4, a5)
 	}
 	panic(ErrUnexpectedEitherBehaiviour)
 }

@@ -35,7 +35,7 @@ func FromBoth[T any](value T, err error) Result[T] {
 	return FromValue(value)
 }
 
-func Map[A, B any](r Result[A], op func(A) B) Result[B] {
+func Map[A, B any](op func(A) B, r Result[A]) Result[B] {
 	switch v := r.(type) {
 	case *OK[A]:
 		return &OK[B]{Value: op(v.Value)}
@@ -45,47 +45,47 @@ func Map[A, B any](r Result[A], op func(A) B) Result[B] {
 	panic(ErrUnexpectedResultBehaiviour)
 }
 
-func Map2[T1, T2, R any](r1 Result[T1], r2 Result[T2], op func(T1, T2) R) Result[R] {
+func Map2[T1, T2, R any](op func(T1, T2) R, r1 Result[T1], r2 Result[T2]) Result[R] {
 	switch v := r1.(type) {
 	case *OK[T1]:
-		return Map(r2, call.Semi2(op, v.Value))
+		return Map(call.Semi2(op, v.Value), r2)
 	case *Err[T1]:
 		return &Err[R]{Value: v.Value}
 	}
 	panic(ErrUnexpectedResultBehaiviour)
 }
 
-func Map3[T1, T2, T3, R any](r1 Result[T1], r2 Result[T2], r3 Result[T3], op func(T1, T2, T3) R) Result[R] {
+func Map3[T1, T2, T3, R any](op func(T1, T2, T3) R, r1 Result[T1], r2 Result[T2], r3 Result[T3]) Result[R] {
 	switch v := r1.(type) {
 	case *OK[T1]:
-		return Map2(r2, r3, call.Semi3(op, v.Value))
+		return Map2(call.Semi3(op, v.Value), r2, r3)
 	case *Err[T1]:
 		return &Err[R]{Value: v.Value}
 	}
 	panic(ErrUnexpectedResultBehaiviour)
 }
 
-func Map4[T1, T2, T3, T4, R any](r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4], op func(T1, T2, T3, T4) R) Result[R] {
+func Map4[T1, T2, T3, T4, R any](op func(T1, T2, T3, T4) R, r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4]) Result[R] {
 	switch v := r1.(type) {
 	case *OK[T1]:
-		return Map3(r2, r3, r4, call.Semi4(op, v.Value))
+		return Map3(call.Semi4(op, v.Value), r2, r3, r4)
 	case *Err[T1]:
 		return &Err[R]{Value: v.Value}
 	}
 	panic(ErrUnexpectedResultBehaiviour)
 }
 
-func Map5[T1, T2, T3, T4, T5, R any](r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4], r5 Result[T5], op func(T1, T2, T3, T4, T5) R) Result[R] {
+func Map5[T1, T2, T3, T4, T5, R any](op func(T1, T2, T3, T4, T5) R, r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4], r5 Result[T5]) Result[R] {
 	switch v := r1.(type) {
 	case *OK[T1]:
-		return Map4(r2, r3, r4, r5, call.Semi5(op, v.Value))
+		return Map4(call.Semi5(op, v.Value), r2, r3, r4, r5)
 	case *Err[T1]:
 		return &Err[R]{Value: v.Value}
 	}
 	panic(ErrUnexpectedResultBehaiviour)
 }
 
-func FlatMap[A, B any](r Result[A], op func(A) Result[B]) Result[B] {
+func FlatMap[A, B any](op func(A) Result[B], r Result[A]) Result[B] {
 	switch v := r.(type) {
 	case *OK[A]:
 		return op(v.Value)
@@ -95,40 +95,40 @@ func FlatMap[A, B any](r Result[A], op func(A) Result[B]) Result[B] {
 	panic(ErrUnexpectedResultBehaiviour)
 }
 
-func FlatMap2[T1, T2, R any](r1 Result[T1], r2 Result[T2], op func(T1, T2) Result[R]) Result[R] {
+func FlatMap2[T1, T2, R any](op func(T1, T2) Result[R], r1 Result[T1], r2 Result[T2]) Result[R] {
 	switch v := r1.(type) {
 	case *OK[T1]:
-		return FlatMap(r2, call.Semi2(op, v.Value))
+		return FlatMap(call.Semi2(op, v.Value), r2)
 	case *Err[T1]:
 		return &Err[R]{Value: v.Value}
 	}
 	panic(ErrUnexpectedResultBehaiviour)
 }
 
-func FlatMap3[T1, T2, T3, R any](r1 Result[T1], r2 Result[T2], r3 Result[T3], op func(T1, T2, T3) Result[R]) Result[R] {
+func FlatMap3[T1, T2, T3, R any](op func(T1, T2, T3) Result[R], r1 Result[T1], r2 Result[T2], r3 Result[T3]) Result[R] {
 	switch v := r1.(type) {
 	case *OK[T1]:
-		return FlatMap2(r2, r3, call.Semi3(op, v.Value))
+		return FlatMap2(call.Semi3(op, v.Value), r2, r3)
 	case *Err[T1]:
 		return &Err[R]{Value: v.Value}
 	}
 	panic(ErrUnexpectedResultBehaiviour)
 }
 
-func FlatMap4[T1, T2, T3, T4, R any](r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4], op func(T1, T2, T3, T4) Result[R]) Result[R] {
+func FlatMap4[T1, T2, T3, T4, R any](op func(T1, T2, T3, T4) Result[R], r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4]) Result[R] {
 	switch v := r1.(type) {
 	case *OK[T1]:
-		return FlatMap3(r2, r3, r4, call.Semi4(op, v.Value))
+		return FlatMap3(call.Semi4(op, v.Value), r2, r3, r4)
 	case *Err[T1]:
 		return &Err[R]{Value: v.Value}
 	}
 	panic(ErrUnexpectedResultBehaiviour)
 }
 
-func FlatMap5[T1, T2, T3, T4, T5, R any](r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4], r5 Result[T5], op func(T1, T2, T3, T4, T5) Result[R]) Result[R] {
+func FlatMap5[T1, T2, T3, T4, T5, R any](op func(T1, T2, T3, T4, T5) Result[R], r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4], r5 Result[T5]) Result[R] {
 	switch v := r1.(type) {
 	case *OK[T1]:
-		return FlatMap4(r2, r3, r4, r5, call.Semi5(op, v.Value))
+		return FlatMap4(call.Semi5(op, v.Value), r2, r3, r4, r5)
 	case *Err[T1]:
 		return &Err[R]{Value: v.Value}
 	}

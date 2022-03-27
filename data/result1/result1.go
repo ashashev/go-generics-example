@@ -18,6 +18,6 @@ func FromErr[T any](value error) Result[T] {
 	return either.FromLeft[T](value)
 }
 
-func Map[T1, T2 any](r1 Result[T1], op func(T1) T2) Result[T2] {
-	return either.Map[error, T1](r1, op)
+func Map[T1, T2 any](op func(T1) T2, r1 Result[T1]) Result[T2] {
+	return either.Map[error, T1](op, r1)
 }

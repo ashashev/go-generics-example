@@ -62,12 +62,24 @@ func DataBuildedWithResult(firstFail bool) (*example.Data, error) {
 	s := &example.S2{}
 
 	parts := s.GetPartsID(firstFail)
-	id := result.FlatMap(parts, s.JoinParts)
-	field1 := result.FlatMap2(parts, id, s.GetField1)
-	field2 := result.FlatMap2(parts, field1, s.GetField2)
-	field3 := result.FlatMap2(field1, field2, s.GetField3)
+	id := result.FlatMap(s.JoinParts, parts)
+	field1 := result.FlatMap2(s.GetField1, parts, id)
+	field2 := result.FlatMap2(s.GetField2, parts, field1)
+	field3 := result.FlatMap2(s.GetField3, field1, field2)
 
-	return result.Map4(id, field1, field2, field3, example.NewData).Both()
+	return result.Map4(example.NewData, id, field1, field2, field3).Both()
+}
+
+func DataBuildedWithResultUseS1(firstFail bool) (*example.Data, error) {
+	s := &example.S2{}
+
+	parts := s.GetPartsID(firstFail)
+	id := result.FlatMap(s.JoinParts, parts)
+	field1 := result.FlatMap2(s.GetField1, parts, id)
+	field2 := result.FlatMap2(s.GetField2, parts, field1)
+	field3 := result.FlatMap2(s.GetField3, field1, field2)
+
+	return result.Map4(example.NewData, id, field1, field2, field3).Both()
 }
 
 func BenchmarkResultSuccess(b *testing.B) {

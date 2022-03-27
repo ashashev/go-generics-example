@@ -2,6 +2,42 @@
 
 ## Slice Contains
 
+There are three implementations of the same thing. It's a simple for-loop, with
+early returning when an element is found.
+
+The generic implementation:
+```golang
+func Contains[T ~[]I, I comparable](haystack T, needle I) bool {
+	for i := range haystack {
+		if needle == haystack[i] {
+			return true
+		}
+	}
+	return false
+}
+```
+
+And two specific implementations for slice of ints and slice of strings:
+```golang
+func SliceContainsString(haystack []string, needle string) bool {
+	for i := range haystack {
+		if needle == haystack[i] {
+			return true
+		}
+	}
+	return false
+}
+
+func SliceContainsInt(haystack []int, needle int) bool {
+	for i := range haystack {
+		if needle == haystack[i] {
+			return true
+		}
+	}
+	return false
+}
+```
+
 ### Run #1
 ```
 go test -bench . -benchtime 10s ./example/contains_test.go
@@ -94,6 +130,38 @@ ok  	command-line-arguments	88.657s
 
 ## Get Keys
 
+Here I benchmark extracting keys from a map. Again the generic implementation:
+```golang
+func GetKeys[M ~map[K]V, K comparable, V any](m M) []K {
+	data := make([]K, 0, len(m))
+	for k := range m {
+		data = append(data, k)
+	}
+	return data
+}
+```
+
+And the specific implementation:
+```golang
+func GetKeysStringData(m map[string]*Data) []string {
+	data := make([]string, 0, len(m))
+	for k := range m {
+		data = append(data, k)
+	}
+	return data
+}
+```
+
+Type `Data` is defined as
+```golang
+type Data struct {
+	ID     string
+	Field1 string
+	Field2 float64
+	Field3 uint64
+}
+```
+
 ### Run #1
 ```
 go test -bench . -benchtime 10s ./example/get_keys_test.go
@@ -155,6 +223,259 @@ ok  	command-line-arguments	28.627s
 ```
 
 ## Error Handing
+
+In this case, I imitate getting data for creating of Data instance from
+an external source.
+
+As a first action, it gets a slice of strings that are converted to a value for
+the ID field. Then it uses the slice and the ID for getting value for the Field1
+value. The slice and value of Field1 are used for getting Field2's value.
+Field3's value is got from Field1 and Field2 values.
+
+The following struct plays a role of the data source.
+```golang
+type S1 struct{}
+
+func (*S1) GetPartsID(fail bool) ([]string, error) {
+	if fail {
+		return nil, fmt.Errorf("fail")
+	}
+
+	return []string{"1qaz", "2wsx"}, nil
+}
+
+func (*S1) JoinParts(ps []string) (string, error) {
+	return "1qaz-2wsx", nil
+}
+
+func (*S1) GetField1([]string, string) (string, error) {
+	return "3edc", nil
+}
+
+func (*S1) GetField2([]string, string) (float64, error) {
+	return 0.34, nil
+}
+
+func (*S1) GetField3(string, float64) (uint64, error) {
+	return 24, nil
+}
+```
+
+The `NewData` function creates instance of `Data`.
+```golang
+func NewData(ID string, Field1 string, Field2 float64, Field3 uint64) *Data {
+	return &Data{
+		ID:     ID,
+		Field1: Field1,
+		Field2: Field2,
+		Field3: Field3,
+	}
+}
+```
+
+The first benchmarked code is simple if-guard approach.
+```golang
+func DataBuildedWithIfGuard(firstFail bool) (*example.Data, error) {
+	s := &example.S1{}
+
+	parts, err := s.GetPartsID(firstFail)
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := s.JoinParts(parts)
+	if err != nil {
+		return nil, err
+	}
+
+	field1, err := s.GetField1(parts, id)
+	if err != nil {
+		return nil, err
+	}
+
+	field2, err := s.GetField2(parts, field1)
+	if err != nil {
+		return nil, err
+	}
+
+	field3, err := s.GetField3(field1, field2)
+	if err != nil {
+		return nil, err
+	}
+
+	return example.NewData(id, field1, field2, field3), nil
+}
+```
+
+The next variant is a structure that wraps intermediates results.
+```golang
+type DataConstrutor struct {
+	S1     *S1
+	Fail   bool
+	parts  []string
+	id     string
+	field1 string
+	field2 float64
+	field3 uint64
+}
+
+func (dc *DataConstrutor) GetPartsID() (err error) {
+	dc.parts, err = dc.S1.GetPartsID(dc.Fail)
+	return
+}
+
+func (dc *DataConstrutor) JoinParts() (err error) {
+	dc.id, err = dc.S1.JoinParts(dc.parts)
+	return
+}
+
+func (dc *DataConstrutor) GetField1() (err error) {
+	dc.field1, err = dc.S1.GetField1(dc.parts, dc.id)
+	return
+}
+
+func (dc *DataConstrutor) GetField2() (err error) {
+	dc.field2, err = dc.S1.GetField2(dc.parts, dc.field1)
+	return
+}
+
+func (dc *DataConstrutor) GetField3() (err error) {
+	dc.field3, err = dc.S1.GetField3(dc.field1, dc.field2)
+	return
+}
+
+func (dc *DataConstrutor) GetData() *Data {
+	return NewData(dc.id, dc.field1, dc.field2, dc.field3)
+}
+
+func (*DataConstrutor) Chain(ops ...func() error) error {
+	for _, op := range ops {
+		if err := op(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+```
+
+It is used in the following way.
+```golang
+func DataBuildedWithChain(firstFail bool) (*example.Data, error) {
+	dc := &example.DataConstrutor{
+		S1:   &example.S1{},
+		Fail: firstFail,
+	}
+
+	err := dc.Chain(
+		dc.GetPartsID,
+		dc.JoinParts,
+		dc.GetField1,
+		dc.GetField2,
+		dc.GetField3,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return dc.GetData(), nil
+}
+```
+
+The last variant works with `Result` interface. It is generic interface that
+defined as:
+```golang
+type Result[T any] interface {
+	Get() T
+	Err() error
+
+	// Both returns default value for T if result is empty
+	Both() (T, error)
+}
+```
+
+An instance of this interface could be either `OK[T]` or `Err[T]` structures.
+Their definition is:
+```golang
+type OK[T any] struct {
+	Value T
+}
+
+type Err[T any] struct {
+	Value error
+}
+```
+
+And we need functions which let us to manipulate a value inside `Result`.
+Here they are:
+```golang
+func Map[A, B any](op func(A) B, r Result[A]) Result[B]
+
+func Map2[T1, T2, R any](op func(T1, T2) R, r1 Result[T1], r2 Result[T2]) Result[R]
+
+func Map3[T1, T2, T3, R any](op func(T1, T2, T3) R, r1 Result[T1], r2 Result[T2], r3 Result[T3]) Result[R]
+
+func Map4[T1, T2, T3, T4, R any](op func(T1, T2, T3, T4) R, r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4]) Result[R]
+
+func Map5[T1, T2, T3, T4, T5, R any](op func(T1, T2, T3, T4, T5) R, r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4], r5 Result[T5]) Result[R]
+
+func FlatMap[A, B any](op func(A) Result[B], r Result[A]) Result[B]
+
+func FlatMap2[T1, T2, R any](op func(T1, T2) Result[R], r1 Result[T1], r2 Result[T2]) Result[R]
+
+func FlatMap3[T1, T2, T3, R any](op func(T1, T2, T3) Result[R], r1 Result[T1], r2 Result[T2], r3 Result[T3]) Result[R]
+
+func FlatMap4[T1, T2, T3, T4, R any](op func(T1, T2, T3, T4) Result[R], r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4]) Result[R]
+
+func FlatMap5[T1, T2, T3, T4, T5, R any](op func(T1, T2, T3, T4, T5) Result[R], r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4], r5 Result[T5]) Result[R]
+```
+
+It looks like we need a lot of auxiliary code, but we need to write it only
+once. Then we can use it everywhere.
+
+OK, here there is how we can use `Result`.
+```golang
+func DataBuildedWithResult(firstFail bool) (*example.Data, error) {
+	s := &example.S2{}
+
+	parts := s.GetPartsID(firstFail)
+	id := result.FlatMap(s.JoinParts, parts)
+	field1 := result.FlatMap2(s.GetField1, parts, id)
+	field2 := result.FlatMap2(s.GetField2, parts, field1)
+	field3 := result.FlatMap2(s.GetField3, field1, field2)
+
+	return result.Map4(example.NewData, id, field1, field2, field3).Both()
+}
+```
+
+Here I use `S2`, it is a modified version of `S1` where all methods return
+`Result` instead of value and error.
+```golang
+type S2 struct{}
+
+func (*S2) GetPartsID(fail bool) result.Result[[]string] {
+	if fail {
+		return result.FromErr[[]string](fmt.Errorf("fail"))
+	}
+
+	return result.FromValue([]string{"1qaz", "2wsx"})
+}
+
+func (*S2) JoinParts(ps []string) result.Result[string] {
+	return result.FromValue("1qaz-2wsx")
+}
+
+func (*S2) GetField1([]string, string) result.Result[string] {
+	return result.FromValue("3edc")
+}
+
+func (*S2) GetField2([]string, string) result.Result[float64] {
+	return result.FromValue(0.34)
+}
+
+func (*S2) GetField3(string, float64) result.Result[uint64] {
+	return result.FromValue[uint64](24)
+}
+```
 
 ### Run #1
 ```

@@ -19,7 +19,7 @@ func Contains[T ~[]I, I comparable](haystack T, needle I) bool {
 }
 ```
 
-And two specific implementations for slice of ints and slice of strings:
+And below, two specific implementations for slice of ints and slice of strings:
 ```golang
 func SliceContainsString(haystack []string, needle string) bool {
 	for i := range haystack {
@@ -157,7 +157,7 @@ ok  	command-line-arguments	88.657s
 
 ### Description
 
-Here I benchmark extracting keys from a map. Again the generic implementation:
+Next case is extracting keys from the map. Again the generic implementation:
 ```golang
 func GetKeys[M ~map[K]V, K comparable, V any](m M) []K {
 	data := make([]K, 0, len(m))
@@ -260,19 +260,21 @@ ok  	command-line-arguments	28.627s
 ```
 </details>
 
-## Error Handing
+## Error Handling
 
 ### Description
 
-In this case, I imitate getting data for creating of Data instance from
-an external source.
+In this case, I imitate accumulating data for creation instance of Data by data
+from an external source.
 
-As a first action, it gets a slice of strings that are converted to a value for
-the ID field. Then it uses the slice and the ID for getting value for the Field1
-value. The slice and value of Field1 are used for getting Field2's value.
-Field3's value is got from Field1 and Field2 values.
+As the first step, the source is requested  a slice of strings that are
+converted to a value for the ID field. Then the slice and the ID are used for
+requesting value for the Field1 value. The slice and value of Field1 are passed
+to the source, and it returns a value for Field2. For computing Field3, the
+source is requested by passing Field1 and Field2 values.
 
-The following struct plays a role of the data source.
+The following struct acts as a data source.
+
 ```golang
 type S1 struct{}
 
@@ -301,7 +303,7 @@ func (*S1) GetField3(string, float64) (uint64, error) {
 }
 ```
 
-The `NewData` function creates instance of `Data`.
+`NewData` function returns instance of `Data`.
 ```golang
 func NewData(ID string, Field1 string, Field2 float64, Field3 uint64) *Data {
 	return &Data{
@@ -347,7 +349,14 @@ func DataBuildedWithIfGuard(firstFail bool) (*example.Data, error) {
 }
 ```
 
-The next variant is a structure that wraps intermediates results.
+The advantage of this variant is  explicit dependencies of calls. But it looks
+a bit ugly, especially, if we add more steps.
+
+The next variant is a structure that stores intermediates results and provides
+methods that wrap calls to the source. Furthermore, it provides a special
+method `Chain`. The aim of this method is executing passed functions one by one,
+with early returning if one of them returns error.
+
 ```golang
 type DataConstrutor struct {
 	S1     *S1
@@ -398,7 +407,7 @@ func (*DataConstrutor) Chain(ops ...func() error) error {
 }
 ```
 
-It is used in the following way.
+Its usage is shown below:
 ```golang
 func DataBuildedWithChain(firstFail bool) (*example.Data, error) {
 	dc := &example.DataConstrutor{
@@ -421,8 +430,11 @@ func DataBuildedWithChain(firstFail bool) (*example.Data, error) {
 }
 ```
 
+The usage is concise enough, but we lose visibility of dependencies between
+calls.
+
 The last variant works with `Result` interface. It is generic interface that
-defined as:
+could be defined as:
 ```golang
 type Result[T any] interface {
 	Get() T
@@ -433,8 +445,8 @@ type Result[T any] interface {
 }
 ```
 
-An instance of this interface could be either `OK[T]` or `Err[T]` structures.
-Their definition is:
+The instance of this interface could be either `OK[T]` or `Err[T]` structures.
+They are defined as:
 ```golang
 type OK[T any] struct {
 	Value T
@@ -445,8 +457,7 @@ type Err[T any] struct {
 }
 ```
 
-And we need functions which let us to manipulate a value inside `Result`.
-Here they are:
+The following offers functions that let to manipulate a value inside `Result`:
 ```golang
 func Map[A, B any](op func(A) B, r Result[A]) Result[B]
 
@@ -469,10 +480,10 @@ func FlatMap4[T1, T2, T3, T4, R any](op func(T1, T2, T3, T4) Result[R], r1 Resul
 func FlatMap5[T1, T2, T3, T4, T5, R any](op func(T1, T2, T3, T4, T5) Result[R], r1 Result[T1], r2 Result[T2], r3 Result[T3], r4 Result[T4], r5 Result[T5]) Result[R]
 ```
 
-It looks like we need a lot of auxiliary code, but we need to write it only
-once. Then we can use it everywhere.
+It may seem that this solution requires a lot of auxiliary code, but this code
+is written only once because it is generic.
 
-OK, here there is how we can use `Result`.
+So, here below is how we can use `Result` structure. 
 ```golang
 func DataBuildedWithResult(firstFail bool) (*example.Data, error) {
 	s := &example.S2{}
@@ -486,9 +497,10 @@ func DataBuildedWithResult(firstFail bool) (*example.Data, error) {
 	return result.Map4(example.NewData, id, field1, field2, field3).Both()
 }
 ```
+It looks concise and keeps visibility of dependencies of calls.
 
-Here I use `S2`, it is a modified version of `S1` where all methods return
-`Result` instead of value and error.
+Above S2 is used, it is a modified version of S1 where all methods return
+`Result[...]` instead of value and error.
 ```golang
 type S2 struct{}
 

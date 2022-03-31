@@ -70,16 +70,36 @@ func DataBuildedWithResult(firstFail bool) (*example.Data, error) {
 	return result.Map4(example.NewData, id, field1, field2, field3).Both()
 }
 
-func DataBuildedWithResultUseS1(firstFail bool) (*example.Data, error) {
+func DataBuildedWithResultNestedFlatMap(firstFail bool) (*example.Data, error) {
 	s := &example.S2{}
 
-	parts := s.GetPartsID(firstFail)
-	id := result.FlatMap(s.JoinParts, parts)
-	field1 := result.FlatMap2(s.GetField1, parts, id)
-	field2 := result.FlatMap2(s.GetField2, parts, field1)
-	field3 := result.FlatMap2(s.GetField3, field1, field2)
+	return result.FlatMap(
+		func(parts []string) result.Result[*example.Data] {
+			return result.FlatMap(
+				func(id string) result.Result[*example.Data] {
+					return result.FlatMap(
+						func(field1 string) result.Result[*example.Data] {
+							return result.FlatMap(
+								func(field2 float64) result.Result[*example.Data] {
+									return result.Map(
+										func(field3 uint64) *example.Data {
+											return example.NewData(id, field1, field2, field3)
+										},
+										s.GetField3(field1, field2),
+									)
+								},
+								s.GetField2(parts, field1),
+							)
+						},
+						s.GetField1(parts, id),
+					)
 
-	return result.Map4(example.NewData, id, field1, field2, field3).Both()
+				},
+				s.JoinParts(parts),
+			)
+		},
+		s.GetPartsID(firstFail),
+	).Both()
 }
 
 func BenchmarkResultSuccess(b *testing.B) {
@@ -100,6 +120,12 @@ func BenchmarkResultSuccess(b *testing.B) {
 			DataBuildedWithResult(false)
 		}
 	})
+
+	b.Run("Result Nested FlatMap", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			DataBuildedWithResultNestedFlatMap(false)
+		}
+	})
 }
 
 func BenchmarkResultFirstFail(b *testing.B) {
@@ -118,6 +144,12 @@ func BenchmarkResultFirstFail(b *testing.B) {
 	b.Run("Result", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			DataBuildedWithResult(true)
+		}
+	})
+
+	b.Run("Result Nested FlatMap", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			DataBuildedWithResultNestedFlatMap(true)
 		}
 	})
 }
